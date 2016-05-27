@@ -1,0 +1,152 @@
+############################################### CSE 508 Network Security #######################################################################
+
+Homework 2: Programming with Libpcap
+Name: Harshkumar Patel
+SBU ID: 110371010
+
+#############################################################################################################################################
+
+List of all files:
+
+- mydump.c : 		This is the main file which will receive command line arguments
+	     		and is responsible for calling appropriate function i.e. offline
+	     		reading or online reading
+
+- functionUtil.c: 	This file specifies methods which will be called accordingly
+	  	  	by mydump.c and is responsible for processing all received 
+		  	packets and calling appropriate print methods of printHeader.c
+
+- printHeader.c: 	This file responsible for printing all different layer's packet.
+
+- arguments.h:		This file will hold all required inputs i.e. expression, pattern to
+			search, filename etc.
+
+- Makefile:		To compile the code use this file. After completion of execution of code
+			use 'make clean'.
+
+#############################################################################################################################################
+
+How to run this code:
+
+1. First do 'make' inside directory where this code is located.
+
+2. Then do 'sudo ./mydump [-h] [-i interfaceName] [-r fileName] [-s pattern] expression'
+
+	- Use '-h' option for help. It will give you proper info regarding how to use command line arguments.
+
+#############################################################################################################################################
+
+Sample Output:
+
+Scenario 1:  TCP Packet
+	sudo ./mydump -r hw1.pcap tcp
+
+Output:
+----------------------------------------------- New Packet ----------------------------------------------------------
+   Timestamp = Sun Jan 13 02:54:46 2013
+   Destination MAC Address : 00-0C-29-E9-94-8E    Source MAC Address: C4-3D-C7-17-6F-9B   Type: 0x800 
+   IP Version: 4    IP Header Length: 20 Bytes    IP Total Length: 231 Bytes (Packet Size) Protocol: TCP
+   Source IP: 91.189.92.190   Destination IP: 192.168.0.200
+   Source Port: 80    Destination Port: 49821 
+   Sequence Number: 1681437209    Acknowledge Number: 2563424514    TCP Header Length: 32 Bytes
+
+   48 54 54 50 2F 31 2E 31 20 33 30 34 20 4E 6F 74        HTTP/1.1 304 Not
+   20 4D 6F 64 69 66 69 65 64 0D 0A 44 61 74 65 3A         Modified..Date:
+   20 53 75 6E 2C 20 31 33 20 4A 61 6E 20 32 30 31         Sun, 13 Jan 201
+   33 20 30 37 3A 35 34 3A 34 36 20 47 4D 54 0D 0A        3 07:54:46 GMT..
+   53 65 72 76 65 72 3A 20 41 70 61 63 68 65 2F 32        Server: Apache/2
+   2E 32 2E 32 32 20 28 55 62 75 6E 74 75 29 0D 0A        .2.22 (Ubuntu)..
+   43 6F 6E 6E 65 63 74 69 6F 6E 3A 20 4B 65 65 70        Connection: Keep
+   2D 41 6C 69 76 65 0D 0A 4B 65 65 70 2D 41 6C 69        -Alive..Keep-Ali
+   76 65 3A 20 74 69 6D 65 6F 75 74 3D 35 2C 20 6D        ve: timeout=5, m
+   61 78 3D 38 37 0D 0A 45 54 61 67 3A 20 22 34 37        ax=87..ETag: "47
+   2D 34 64 32 65 30 63 36 37 36 36 64 63 30 22 0D        -4d2e0c6766dc0".
+   0A 0D 0A                                  ...
+
+
+----------------------------------------------- End of Packet ----------------------------------------------------------
+
+#############################################################################################################################################
+
+Scenario 2: UDP Packet
+	sudo ./mydump -r hw1.pcap udp
+
+Output:
+----------------------------------------------- New Packet ----------------------------------------------------------
+   Timestamp = Sat Jan 12 12:06:53 2013
+   Destination MAC Address : FF-FF-FF-FF-FF-FF    Source MAC Address: 00-16-44-B5-86-2E   Type: 0x800 
+   IP Version: 4    IP Header Length: 20 Bytes    IP Total Length: 78 Bytes (Packet Size) Protocol: UDP
+   Source IP: 192.168.0.3   Destination IP: 192.168.0.255
+   Source Port: 137   Destination Port: 137   UDP Length: 58
+
+   93 87 01 10 00 01 00 00 00 00 00 00 20 45 4A 46        ............ EJF
+   44 45 42 46 45 45 42 46 41 43 41 43 41 43 41 43        DEBFEEBFACACACAC
+   41 43 41 43 41 43 41 43 41 43 41 41 41 00 00 20        ACACACACACAAA.. 
+   00 01                                    ..
+
+
+----------------------------------------------- End of Packet ----------------------------------------------------------
+
+#############################################################################################################################################
+
+Scenario 3: ICMP Packet
+	sudo ./mydump -r hw1.pcap icmp
+
+Output:
+----------------------------------------------- New Packet ----------------------------------------------------------
+   Timestamp = Mon Jan 14 12:42:31 2013
+   Destination MAC Address : 00-0C-29-E9-94-8E    Source MAC Address: C4-3D-C7-17-6F-9B   Type: 0x800 
+   IP Version: 4    IP Header Length: 20 Bytes    IP Total Length: 76 Bytes (Packet Size) Protocol: ICMP
+   Source IP: 1.234.31.20   Destination IP: 192.168.0.200
+
+   45 00 00 30 00 00 40 00 2E 06 6A 5A C0 A8 00 C8        E..0..@...jZ....
+   01 EA 1F 14 00 50 7B 81 BD CD 09 C6 3A 35 22 B0        .....P{.....:5".
+   70 12 39 08 11 AB 00 00 02 04 05 B4 01 01 04 02        p.9.............
+
+
+----------------------------------------------- End of Packet ----------------------------------------------------------
+
+#############################################################################################################################################
+
+Scenario 4: Searching 'DmW' in ARP packet (demonnstarting search function of code)
+
+	Run command: sudo ./mydump -r hw1.pcap -s DmW arp
+
+Output: 
+----------------------------------------------- New Packet ----------------------------------------------------------
+   Timestamp = Mon Jan 14 02:43:39 2013
+   Destination MAC Address : FF-FF-FF-FF-FF-FF    Source MAC Address: 44-6D-57-F6-7E-00   Type: 0x806 
+
+   08 00 06 04 00 01 44 6D 57 F6 7E 00 C0 A8 00 0B        ......DmW.~.....
+   00 00 00 00 00 00 C0 A8 00 0C 00 00 00 00 00 00        ................
+   00 00 00 00 00 00 00 00 00 00 00 00                ............
+
+
+----------------------------------------------- End of Packet ----------------------------------------------------------
+
+#############################################################################################################################################
+
+Scenario 5: Giving both -r and -i option together (error should be generated)
+	sudo ./mydump -i eth0 -r hw1.pcap tcp
+
+Output: 
+	Invalid Option in argument. Use -h for more help of command usage.
+
+#############################################################################################################################################
+
+Scenario 6: ARP packet
+	sudo ./mydump -r hw1.pcap arp
+
+Output:
+
+----------------------------------------------- New Packet ----------------------------------------------------------
+   Timestamp = Sat Jan 12 16:12:33 2013
+   Destination MAC Address : FF-FF-FF-FF-FF-FF    Source MAC Address: C4-3D-C7-17-6F-9B   Type: 0x806 
+
+   08 00 06 04 00 01 C4 3D C7 17 6F 9B C0 A8 00 01        .......=..o.....
+   00 00 00 00 00 00 C0 A8 00 0C 00 00 00 00 00 00        ................
+   00 00 00 00 00 00 00 00 00 00 00 00                ............
+
+
+----------------------------------------------- End of Packet ----------------------------------------------------------
+
